@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanner Dashboard</title>
+<style>
+body { font-family: sans-serif; background: #121212; color: #fff; text-align: center; margin-top: 50px; }
+.btn { display: inline-block; padding: 10px 20px; background: #007bff; color: #fff; text-decoration: none; border-radius: 5px; margin: 10px; }
+#status { font-size: 20px; margin-bottom: 20px; }
+.stopped { color: #ff4444; }
+.running { color: #00C851; }
+</style>
+<script>
+async function update() {
+	try {
+		let res = await fetch('/api/status');
+		let data = await res.json();
+		let statusEl = document.getElementById('status');
+		if (data.stopped) {
+			statusEl.innerHTML = `Status: <span class="stopped">Stopped (Whitelist Inactive)</span> | Scanned: ${data.count}`;
+		} else {
+			statusEl.innerHTML = `Status: <span class="running">Running</span> | Scanned: ${data.count}`;
+			setTimeout(update, 2000);
+		}
+	} catch (e) {
+		setTimeout(update, 2000);
+	}
+}
+window.onload = update;
+</script>
+</head>
+<body>
+<h1>Network Scanner</h1>
+<div id="status">Loading...</div>
+<a href="/results.csv" class="btn">Download CSV</a>
+<a href="/results.json" class="btn">Download JSON</a>
+</body>
+</html>

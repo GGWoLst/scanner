@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  scanner:
+    build: .
+    container_name: network_scanner
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./geo:/app/geo
+      - ./cidr:/app/cidr
+      - ./results.csv:/app/results.csv
+      - ./results.json:/app/results.json
+    restart: always
+    privileged: true
